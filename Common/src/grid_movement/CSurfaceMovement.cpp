@@ -793,15 +793,27 @@ void CSurfaceMovement::SetParametricCoord(CGeometry* geometry, CConfig* config, 
           CartCoord[1] = atan2(Zbar, Ybar);
           if (CartCoord[1] > PI_NUMBER / 2.0) CartCoord[1] -= 2.0 * PI_NUMBER;
           CartCoord[2] = Xbar;*/
-          su2double direction_x = 0.0;
+          su2double direction_x = 1.0;
           su2double direction_y = 0.0;
-          su2double direction_z = 1.0;
+          su2double direction_z = 0.0;
           if(direction_z == 1.0){
             CartCoord[0] = sqrt(Xbar * Xbar + Ybar * Ybar);
             CartCoord[1] = atan2(Ybar, Xbar);
-            if (CartCoord[1] > PI_NUMBER / 2.0) Coord[1] -= 2.0 * PI_NUMBER;
+            if (CartCoord[1] > PI_NUMBER / 2.0) CartCoord[1] -= 2.0 * PI_NUMBER;
             cout<<"direction Z: "<<direction_z<<endl;
             CartCoord[2] = Zbar;
+          } else if (direction_y == 1.0) {
+            CartCoord[0] = sqrt(Xbar * Xbar + Zbar * Zbar);
+            CartCoord[1] = atan2(Xbar, Zbar);
+            cout << "direction Y: " << direction_y << endl;
+            if (CartCoord[1] > PI_NUMBER / 2.0) CartCoord[1] -= 2.0 * PI_NUMBER;
+            CartCoord[2] = Ybar;
+          } else {
+            CartCoord[0] = sqrt(Ybar * Ybar + Zbar * Zbar);
+            CartCoord[1] = atan2(Zbar, Ybar);
+            cout << "direction X: " << direction_x << endl;
+            if (CartCoord[1] > PI_NUMBER / 2.0) CartCoord[1] -= 2.0 * PI_NUMBER;
+            CartCoord[2] = Xbar;
           }
           } else if (spherical || polar) {
           X_0 = config->GetFFD_Axis(0);
@@ -1146,20 +1158,61 @@ void CSurfaceMovement::CheckFFDIntersections(CGeometry* geometry, CConfig* confi
                   Xbar = Coord_0[0] - X_0;
                   Ybar = Coord_0[1] - Y_0;
                   Zbar = Coord_0[2] - Z_0;
+                  su2double direction_x = 1.0;
+                  su2double direction_y = 0.0;
+                  su2double direction_z = 0.0;
+                  if (direction_z == 1.0) {
+                    Coord_0[0] = sqrt(Xbar * Xbar + Ybar * Ybar);
+                    IPlane_Coord_0_A[1] = atan2(Ybar, Xbar);
+                    if (Coord_0[1] > PI_NUMBER / 2.0) Coord_0[1] -= 2.0 * PI_NUMBER;
+                    cout << "direction Z: " << direction_z << endl;
+                    Coord_0[2] = Zbar;
+                  } else if (direction_y == 1.0) {
+                    Coord_0[0] = sqrt(Xbar * Xbar + Zbar * Zbar);
+                    Coord_0[1] = atan2(Xbar, Zbar);
+                    cout << "direction Y: " << direction_y << endl;
+                    if (Coord_0[1] > PI_NUMBER / 2.0) Coord_0[1] -= 2.0 * PI_NUMBER;
+                    Coord_0[2] = Ybar;
+                  } else {
+                    Coord_0[0] = sqrt(Ybar * Ybar + Zbar * Zbar);
+                    Coord_0[1] = atan2(Zbar, Ybar);
+                    cout << "direction X: " << direction_x << endl;
+                    if (Coord_0[1] > PI_NUMBER / 2.0) Coord_0[1] -= 2.0 * PI_NUMBER;
+                    Coord_0[2] = Xbar;
+                  }
 
-                  Coord_0[0] = sqrt(Ybar * Ybar + Zbar * Zbar);
+                  /*Coord_0[0] = sqrt(Ybar * Ybar + Zbar * Zbar);
                   Coord_0[1] = atan2(Zbar, Ybar);
                   if (Coord_0[1] > PI_NUMBER / 2.0) Coord_0[1] -= 2.0 * PI_NUMBER;
-                  Coord_0[2] = Xbar;
+                  Coord_0[2] = Xbar;*/
 
                   Xbar = Coord_1[0] - X_0;
                   Ybar = Coord_1[1] - Y_0;
                   Zbar = Coord_1[2] - Z_0;
+                  if(direction_z == 1.0){
+                    Coord_1[0] = sqrt(Xbar * Xbar + Ybar * Ybar);
+                    Coord_1[1] = atan2(Ybar, Xbar);
+                    if (Coord_1[1] > PI_NUMBER / 2.0) Coord_1[1] -= 2.0 * PI_NUMBER;
+                    cout<<"direction Z: "<<direction_z<<endl;
+                    Coord_1[2] = Zbar;
+                  } else if (direction_y == 1.0) {
+                    Coord_1[0] = sqrt(Xbar * Xbar + Zbar * Zbar);
+                    Coord_1[1] = atan2(Xbar, Zbar);
+                    cout << "direction Y: " << direction_y << endl;
+                    if (Coord_1[1] > PI_NUMBER / 2.0) Coord_1[1] -= 2.0 * PI_NUMBER;
+                    Coord_1[2] = Ybar;
+                  } else {
+                    Coord_1[0] = sqrt(Ybar * Ybar + Zbar * Zbar);
+                    Coord_1[1] = atan2(Zbar, Ybar);
+                    cout << "direction X: " << direction_x << endl;
+                    if (Coord_1[1] > PI_NUMBER / 2.0) Coord_1[1] -= 2.0 * PI_NUMBER;
+                    Coord_1[2] = Xbar;
+                  }
 
-                  Coord_1[0] = sqrt(Ybar * Ybar + Zbar * Zbar);
+                  /*Coord_1[0] = sqrt(Ybar * Ybar + Zbar * Zbar);
                   Coord_1[1] = atan2(Zbar, Ybar);
                   if (Coord_1[1] > PI_NUMBER / 2.0) Coord_1[1] -= 2.0 * PI_NUMBER;
-                  Coord_1[2] = Xbar;
+                  Coord_1[2] = Xbar;*/
 
                 }
 
